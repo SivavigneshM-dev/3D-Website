@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scratch Card</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .scratch-container {
+      position: relative;
+      width: 300px;
+      height: 200px;
+    }
+
+    .hidden-content {
+      width: 100%;
+      height: 100%;
+      background: gold;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      border-radius: 10px;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="scratch-container">
+  <div class="hidden-content">🎉 You Win! 🎉</div>
+  <canvas id="scratchCanvas"></canvas>
+</div>
+
+<script>
+  const canvas = document.getElementById('scratchCanvas');
+  const ctx = canvas.getContext('2d');
+  const container = document.querySelector('.scratch-container');
+
+  canvas.width = container.offsetWidth;
+  canvas.height = container.offsetHeight;
+
+  ctx.fillStyle = '#888';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.globalCompositeOperation = 'destination-out';
+
+  let isDrawing = false;
+  let revealed = false;
+
+  function getPosition(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return { x, y };
+  }
+
+  function startDraw(e) {
+    isDrawing = true;
+    draw(e);
+  }
+
+  function endDraw() {
+    isDrawing = false;
+    ctx.beginPath();
+    checkScratchPercent();
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const { x, y } = getPosition(e);
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2, false);
+    ctx.fill();
+  }
+
+  function checkScratchPercent() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let transparentPixels = 0;
+    for (let i = 3; i < imageData.data.length; i += 4) {
+      if (imageData.data[i] === 0) transparentPixels++;
+    }
+
+    const percent = (transparentPixels / (canvas.width * canvas.height)) * 100;
+
+    if (percent > 50 && !revealed) {
+      revealed = true;
+      launchConfetti();
+    }
+  }
+
+  function launchConfetti() {
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 }
+    });
+  }
+
+  // Event listeners
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
+
+  canvas.addEventListener('touchstart', startDraw);
+  canvas.addEventListener('touchmove', draw);
+  canvas.addEventListener('touchend', endDraw);
+</script>
+
+</body>
+</html>
