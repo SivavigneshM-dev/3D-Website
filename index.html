@@ -1,135 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Scratch Card</title>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Interactive 3D Portfolio — Aurora Studio</title>
 
-    .scratch-container {
-      position: relative;
-      width: 300px;
-      height: 200px;
-    }
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    .hidden-content {
-      width: 100%;
-      height: 100%;
-      background: gold;
-      color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      font-weight: bold;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      border-radius: 10px;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 2;
-      border-radius: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="script.js">
 </head>
 <body>
+  <!-- Custom cursor elements -->
+  <div id="cursor">
+    <div id="cursor-halo"></div>
+    <div id="cursor-dot"></div>
+  </div>
 
-<div class="scratch-container">
-  <div class="hidden-content">🎉 You Win! 🎉</div>
-  <canvas id="scratchCanvas"></canvas>
-</div>
+  <!-- Particle canvas for trailing effect (used sparingly) -->
+  <canvas id="trail-canvas" aria-hidden="true"></canvas>
 
-<script>
-  const canvas = document.getElementById('scratchCanvas');
-  const ctx = canvas.getContext('2d');
-  const container = document.querySelector('.scratch-container');
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#" aria-label="Home">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" fill="#7c3aed"/>
+          <path d="M8 14l2-4 2 4 2-6 2 8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand">Aurora Studio</span>
+      </a>
 
-  canvas.width = container.offsetWidth;
-  canvas.height = container.offsetHeight;
+      <nav class="main-nav" aria-label="Primary navigation">
+        <ul>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
 
-  ctx.fillStyle = '#888';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = 'destination-out';
+      <button id="theme-toggle" aria-label="Toggle theme" class="icon-btn">🌙</button>
+    </div>
+  </header>
 
-  let isDrawing = false;
-  let revealed = false;
+  <!-- 3D Parallax Background -->
+  <div id="parallax-wrap" aria-hidden="true">
+    <!-- layers with different depth data-depth values -->
+    <div class="parallax-layer bg-layer" data-depth="0.06"></div>
+    <div class="parallax-layer mid-layer" data-depth="0.12"></div>
+    <div class="parallax-layer fg-layer" data-depth="0.22"></div>
+    <!-- subtle grid overlay -->
+    <div class="parallax-layer grid-layer" data-depth="0.02"></div>
+  </div>
 
-  function getPosition(e) {
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-    return { x, y };
-  }
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1>Interactive 3D Portfolio</h1>
+          <p class="lead">Hover, swipe, and explore — a tactile portfolio with an animated 3D background and responsive cursor magic.</p>
+          <p class="hero-ctas">
+            <a class="btn primary" href="#work">View Work</a>
+            <a class="btn ghost" href="#contact">Get in touch</a>
+          </p>
+        </div>
 
-  function startDraw(e) {
-    isDrawing = true;
-    draw(e);
-  }
+        <div class="hero-preview" aria-hidden="true">
+          <!-- decorative device / preview -->
+          <div class="preview-card" tabindex="-1">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='520' height='320'><rect width='520' height='320' rx='16' fill='%230f172a'/><text x='50%' y='50%' fill='%23ffffff' font-size='18' font-family='Inter, sans-serif' text-anchor='middle' alignment-baseline='middle'>Live Preview</text></svg>" alt="">
+          </div>
+        </div>
+      </div>
+    </section>
 
-  function endDraw() {
-    isDrawing = false;
-    ctx.beginPath();
-    checkScratchPercent();
-  }
+    <section id="work" class="work">
+      <div class="container">
+        <header class="section-header">
+          <h2>Selected Projects</h2>
+          <p class="section-sub">Interactive, performant, and delightful interfaces.</p>
+        </header>
 
-  function draw(e) {
-    if (!isDrawing) return;
-    e.preventDefault();
-    const { x, y } = getPosition(e);
-    ctx.beginPath();
-    ctx.arc(x, y, 20, 0, Math.PI * 2, false);
-    ctx.fill();
-  }
+        <div class="grid grid-3" id="portfolio">
+          <!-- Example project cards -->
+          <article class="card project" tabindex="0" data-title="Aurora UI" data-desc="Design system & components" data-image="">
+            <div class="card-media" aria-hidden="true"></div>
+            <div class="card-body">
+              <h3>Aurora UI</h3>
+              <p>Design system and component library for fast product builds.</p>
+              <div class="card-actions">
+                <button class="btn outline preview-btn">Preview</button>
+                <a href="#" class="link more-btn">Case Study →</a>
+              </div>
+            </div>
+          </article>
 
-  function checkScratchPercent() {
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let transparentPixels = 0;
-    for (let i = 3; i < imageData.data.length; i += 4) {
-      if (imageData.data[i] === 0) transparentPixels++;
-    }
+          <article class="card project" tabindex="0" data-title="Studio Landing" data-desc="Interactive landing with animations" data-image="">
+            <div class="card-media" aria-hidden="true"></div>
+            <div class="card-body">
+              <h3>Studio Landing</h3>
+              <p>High-performance landing page with attention to microinteractions.</p>
+              <div class="card-actions">
+                <button class="btn outline preview-btn">Preview</button>
+                <a href="#" class="link more-btn">Case Study →</a>
+              </div>
+            </div>
+          </article>
 
-    const percent = (transparentPixels / (canvas.width * canvas.height)) * 100;
+          <article class="card project" tabindex="0" data-title="Data Viz App" data-desc="Fast, accessible charts" data-image="">
+            <div class="card-media" aria-hidden="true"></div>
+            <div class="card-body">
+              <h3>Data Viz App</h3>
+              <p>Interactive charts and dashboards with accessible controls.</p>
+              <div class="card-actions">
+                <button class="btn outline preview-btn">Preview</button>
+                <a href="#" class="link more-btn">Case Study →</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-    if (percent > 50 && !revealed) {
-      revealed = true;
-      launchConfetti();
-    }
-  }
+    <section id="about" class="about">
+      <div class="container">
+        <h2>About</h2>
+        <p>I'm a frontend developer who loves blending motion, performance and accessible experiences.</p>
+      </div>
+    </section>
 
-  function launchConfetti() {
-    confetti({
-      particleCount: 150,
-      spread: 100,
-      origin: { y: 0.6 }
-    });
-  }
+    <section id="contact" class="contact">
+      <div class="container">
+        <h2>Contact</h2>
+        <p>Want to work together? Send an email: <a href="mailto:hello@aurorastudio.example">hello@aurorastudio.example</a></p>
+      </div>
+    </section>
+  </main>
 
-  // Event listeners
-  canvas.addEventListener('mousedown', startDraw);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', endDraw);
-  canvas.addEventListener('mouseleave', endDraw);
+  <!-- Lightbox modal for preview -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true" aria-labelledby="lightbox-title">
+    <div class="lightbox-panel" role="document">
+      <button id="lightbox-close" class="lightbox-close" aria-label="Close preview">✕</button>
+      <h3 id="lightbox-title">Preview</h3>
+      <div id="lightbox-content" class="lightbox-content" tabindex="0">
+        <!-- dynamic content -->
+      </div>
+    </div>
+  </div>
 
-  canvas.addEventListener('touchstart', startDraw);
-  canvas.addEventListener('touchmove', draw);
-  canvas.addEventListener('touchend', endDraw);
-</script>
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Aurora Studio</p>
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="#top">Top</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
 
+  <script src="script.js" defer></script>
 </body>
 </html>
