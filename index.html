@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Interactive 3D Portfolio — Aurora Studio</title>
+  <title>Radioactive Portfolio — Aurora Studio</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="">
+  <link rel="stylesheet" href="script.js">
 </head>
 <body>
   <!-- Custom cursor elements -->
@@ -23,7 +23,7 @@
     <div class="container header-inner">
       <a class="logo" href="#" aria-label="Home">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" fill="#7c3aed"/>
+          <circle cx="12" cy="12" r="10" fill="var(--radioactive-primary)"/>
           <path d="M8 14l2-4 2 4 2-6 2 8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span class="brand">Aurora Studio</span>
@@ -44,7 +44,7 @@
   <!-- 3D Parallax Background -->
   <div id="parallax-wrap" aria-hidden="true">
     <!-- layers with different depth data-depth values -->
-    <div class="parallax-layer bg-layer" data-depth="0.06"></div>
+    <div class="parallax-layer bg-layer radioactive-pulse" data-depth="0.06"></div>
     <div class="parallax-layer mid-layer" data-depth="0.12"></div>
     <div class="parallax-layer fg-layer" data-depth="0.22"></div>
     <!-- subtle grid overlay -->
@@ -55,8 +55,8 @@
     <section class="hero">
       <div class="container hero-inner">
         <div class="hero-copy">
-          <h1>Dummy-Portfolio</h1>
-          <p class="lead">Hover, swipe, and explore — a tactile portfolio with an animated 3D background and responsive cursor magic.</p>
+          <h1>Radioactive Portfolio</h1>
+          <p class="lead">Hover, swipe, and explore — a tactile portfolio with radioactive animations and responsive cursor magic.</p>
           <p class="hero-ctas">
             <a class="btn primary" href="#work">View Work</a>
             <a class="btn ghost" href="#contact">Get in touch</a>
@@ -66,7 +66,7 @@
         <div class="hero-preview" aria-hidden="true">
           <!-- decorative device / preview -->
           <div class="preview-card" tabindex="-1">
-            <img src="" alt="Hero preview" class="preview-img">
+            <div class="preview-img" style="background: linear-gradient(135deg, var(--radioactive-primary), var(--radioactive-secondary)); height: 240px;"></div>
           </div>
         </div>
       </div>
@@ -76,15 +76,15 @@
       <div class="container">
         <header class="section-header">
           <h2>Selected Projects</h2>
-          <p class="section-sub">Interactive, performant, and delightful interfaces.</p>
+          <p class="section-sub">Interactive, performant, and radioactive interfaces.</p>
         </header>
 
         <div class="grid grid-3" id="portfolio">
           <!-- Example project cards -->
           <article class="card project" tabindex="0" data-title="Aurora UI" data-desc="Design system & components" data-image="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80">
-            <div class="card-media" style="background-image:url( 'Ex  CRM Img.jpg')" aria-hidden="true"></div>
+            <div class="card-media" style="background-image:url('https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80')" aria-hidden="true"></div>
             <div class="card-body">
-              <h3>CRM website </h3>
+              <h3>CRM Website</h3>
               <p>Design system and component library for fast product builds.</p>
               <div class="card-actions">
                 <button class="btn outline preview-btn">Preview</button>
@@ -123,14 +123,14 @@
     <section id="about" class="about">
       <div class="container">
         <h2>About</h2>
-        <p>I'm a frontend developer who loves blending motion, performance and accessible experiences.</p>
+        <p>I'm a frontend developer who loves blending motion, performance and WebDevelopment experiences.</p>
       </div>
     </section>
 
     <section id="contact" class="contact">
       <div class="container">
         <h2>Contact</h2>
-        <p>Want to work together? Send an email: <a href="mailto:hello@aurorastudio.example">hello@aurorastudio.example</a></p>
+        <p>Want to work together? Send an email: <a href="mailto:sivavigneshm92@gmail.com">sivavigneshm92@gmail.com</a></p>
       </div>
     </section>
   </main>
