@@ -6,9 +6,8 @@
   <title>Interactive 3D Portfolio — Aurora Studio</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="script.js">
+  <link rel="stylesheet" href="">
 </head>
 <body>
   <!-- Custom cursor elements -->
@@ -17,7 +16,7 @@
     <div id="cursor-dot"></div>
   </div>
 
-  <!-- Particle canvas for trailing effect (used sparingly) -->
+  <!-- Particle canvas for trailing effect -->
   <canvas id="trail-canvas" aria-hidden="true"></canvas>
 
   <header class="site-header">
@@ -56,7 +55,7 @@
     <section class="hero">
       <div class="container hero-inner">
         <div class="hero-copy">
-          <h1>Interactive 3D Portfolio</h1>
+          <h1>Dummy-Portfolio</h1>
           <p class="lead">Hover, swipe, and explore — a tactile portfolio with an animated 3D background and responsive cursor magic.</p>
           <p class="hero-ctas">
             <a class="btn primary" href="#work">View Work</a>
@@ -67,7 +66,7 @@
         <div class="hero-preview" aria-hidden="true">
           <!-- decorative device / preview -->
           <div class="preview-card" tabindex="-1">
-            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='520' height='320'><rect width='520' height='320' rx='16' fill='%230f172a'/><text x='50%' y='50%' fill='%23ffffff' font-size='18' font-family='Inter, sans-serif' text-anchor='middle' alignment-baseline='middle'>Live Preview</text></svg>" alt="">
+            <img src="" alt="Hero preview" class="preview-img">
           </div>
         </div>
       </div>
@@ -82,10 +81,10 @@
 
         <div class="grid grid-3" id="portfolio">
           <!-- Example project cards -->
-          <article class="card project" tabindex="0" data-title="Aurora UI" data-desc="Design system & components" data-image="">
-            <div class="card-media" aria-hidden="true"></div>
+          <article class="card project" tabindex="0" data-title="Aurora UI" data-desc="Design system & components" data-image="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80">
+            <div class="card-media" style="background-image:url( 'Ex  CRM Img.jpg')" aria-hidden="true"></div>
             <div class="card-body">
-              <h3>Aurora UI</h3>
+              <h3>CRM website </h3>
               <p>Design system and component library for fast product builds.</p>
               <div class="card-actions">
                 <button class="btn outline preview-btn">Preview</button>
@@ -94,10 +93,10 @@
             </div>
           </article>
 
-          <article class="card project" tabindex="0" data-title="Studio Landing" data-desc="Interactive landing with animations" data-image="">
-            <div class="card-media" aria-hidden="true"></div>
+          <article class="card project" tabindex="0" data-title="Studio Landing" data-desc="Interactive landing with animations" data-image="https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')" aria-hidden="true"></div>
             <div class="card-body">
-              <h3>Studio Landing</h3>
+              <h3>E-commerce Website</h3>
               <p>High-performance landing page with attention to microinteractions.</p>
               <div class="card-actions">
                 <button class="btn outline preview-btn">Preview</button>
@@ -106,8 +105,8 @@
             </div>
           </article>
 
-          <article class="card project" tabindex="0" data-title="Data Viz App" data-desc="Fast, accessible charts" data-image="">
-            <div class="card-media" aria-hidden="true"></div>
+          <article class="card project" tabindex="0" data-title="Data Viz App" data-desc="Fast, accessible charts" data-image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80">
+            <div class="card-media" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')" aria-hidden="true"></div>
             <div class="card-body">
               <h3>Data Viz App</h3>
               <p>Interactive charts and dashboards with accessible controls.</p>

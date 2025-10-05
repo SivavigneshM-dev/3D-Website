@@ -1,12 +1,3 @@
-/* script.js
-   Implements:
-   - 3D parallax background (mouse hover on desktop; swipe on mobile)
-   - custom cursor (halo + dot) + magnetic hover over interactive elements
-   - lightweight trailing particles (canvas)
-   - project card tilt on hover / touch
-   - lightbox preview
-*/
-
 (() => {
   // Helpers & feature detection
   const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
@@ -26,8 +17,18 @@
   const lightboxClose = document.getElementById('lightbox-close');
   const yearSpan = document.getElementById('year');
   const themeToggle = document.getElementById('theme-toggle');
+  const header = document.querySelector('.site-header');
 
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  // Header scroll effect
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
 
   // Setup trail canvas
   let trailCtx, trailW, trailH;
@@ -68,7 +69,7 @@
       layer.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotateZ(${rz}deg)`;
     });
 
-    requestAnimationFrame(updateParallax);
+    if (!prefersReducedMotion) requestAnimationFrame(updateParallax);
   }
   if (!prefersReducedMotion) requestAnimationFrame(updateParallax);
 
@@ -115,7 +116,7 @@
       py = (t.clientY - innerHeight/2) / (innerHeight/2);
 
       // spawn few particles (but throttle)
-      spawnTrailParticle(t.clientX, t.clientY);
+      if (Math.random() > 0.7) spawnTrailParticle(t.clientX, t.clientY);
     }, {passive:true});
 
     window.addEventListener('touchend', () => {
@@ -224,136 +225,4 @@
       p.y += p.vy * 6;
       const alpha = Math.max(0, p.life);
       trailCtx.beginPath();
-      const grd = trailCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-      grd.addColorStop(0, `hsla(${p.hue}, 90%, 60%, ${alpha})`);
-      grd.addColorStop(1, `rgba(0,0,0,0)`);
-      trailCtx.fillStyle = grd;
-      trailCtx.globalCompositeOperation = 'lighter';
-      trailCtx.fillRect(p.x - p.size, p.y - p.size, p.size*2, p.size*2);
-      if (p.life <= 0) particles.splice(i,1);
-    }
-    requestAnimationFrame(updateTrail);
-  }
-  if (!prefersReducedMotion) requestAnimationFrame(updateTrail);
-
-  /* ---------------------------
-     Portfolio card keyboard + click handlers
-     - opening lightbox preview
-     --------------------------- */
-  function openLightbox(title, desc) {
-    lightboxContent.innerHTML = `
-      <div style="padding:18px;">
-        <h4>${escapeHtml(title)}</h4>
-        <p style="color:var(--muted)">${escapeHtml(desc)}</p>
-        <div style="height:320px; margin-top:12px; border-radius:8px; background:linear-gradient(120deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08)); display:flex; align-items:center; justify-content:center;">
-          <div style="color:rgba(255,255,255,0.9); font-weight:700;">Live preview placeholder</div>
-        </div>
-      </div>
-    `;
-    lightbox.setAttribute('aria-hidden','false');
-    // focus trap simple: focus content
-    lightboxContent.focus();
-  }
-
-  function closeLightbox() {
-    lightbox.setAttribute('aria-hidden','true');
-    lightboxContent.innerHTML = '';
-  }
-
-  // escape to close
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (lightbox.getAttribute('aria-hidden') === 'false') closeLightbox();
-    }
-  });
-
-  // attach preview buttons
-  portfolio.addEventListener('click', (e) => {
-    const btn = e.target.closest('.preview-btn');
-    if (btn) {
-      const card = btn.closest('.project');
-      const title = card.dataset.title || 'Preview';
-      const desc = card.dataset.desc || '';
-      openLightbox(title, desc);
-    }
-  });
-
-  lightboxClose && lightboxClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  // keyboard activation of cards
-  projects.forEach(card => {
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const title = card.dataset.title || 'Preview';
-        const desc = card.dataset.desc || '';
-        openLightbox(title, desc);
-      }
-    });
-  });
-
-  /* ---------------------------
-     Project tilt on pointer move (desktop)
-     --------------------------- */
-  if (!isTouch && !prefersReducedMotion) {
-    projects.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const relX = e.clientX - rect.left;
-        const relY = e.clientY - rect.top;
-        const px = (relX / rect.width - 0.5) * 2; // -1..1
-        const py = (relY / rect.height - 0.5) * 2;
-        const rotX = py * -6;
-        const rotY = px * 6;
-        const tz = 14;
-        card.style.transform = `perspective(900px) translate3d(${px*6}px, ${py*6}px, ${tz}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-        // subtle shadow via box-shadow
-        card.style.boxShadow = `${-px*6}px ${Math.abs(py)*8}px 28px rgba(2,6,23,0.45)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-        card.style.boxShadow = '';
-      });
-    });
-  }
-
-  /* ---------------------------
-     Light performance-friendly animate loop for cursor halo breathing
-     --------------------------- */
-  if (!prefersReducedMotion) {
-    let t = 0;
-    function haloLoop() {
-      t += 0.02;
-      const s = 1 + Math.sin(t) * 0.05;
-      if (cursorHalo) cursorHalo.style.opacity = (0.9 + Math.sin(t)*0.03).toString();
-      if (cursorDot) cursorDot.style.boxShadow = `0 6px 14px rgba(0,0,0,${0.55 + Math.sin(t)*0.03})`;
-      requestAnimationFrame(haloLoop);
-    }
-    requestAnimationFrame(haloLoop);
-  }
-
-  /* ---------------------------
-     Utility: escape HTML
-     --------------------------- */
-  function escapeHtml(s) {
-    if (!s) return '';
-    return s.replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-
-  /* ---------------------------
-     Minimal theme toggle (persisted)
-     --------------------------- */
-  const THEME_KEY = 'a3d_theme';
-  const savedTheme = localStorage.getItem(THEME_KEY);
-  if (savedTheme === 'light') document.documentElement.classList.add('light');
-  themeToggle && themeToggle.addEventListener('click', () => {
-    document.documentElement.classList.toggle('light');
-    const nowLight = document.documentElement.classList.contains('light');
-    localStorage.setItem(THEME_KEY, nowLight ? 'light' : 'dark');
-    themeToggle.textContent = nowLight ? '☀️' : '🌙';
-  });
-})();
+      const gr
